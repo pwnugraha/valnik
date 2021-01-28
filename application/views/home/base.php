@@ -44,7 +44,7 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Tables -->
-            <?php if ($authorization_group == 2) { ?>
+            <?php if (in_array($authorization_group, [1, 2])) { ?>
                 <li class="nav-item <?= $this->uri->segment(1) == 'entry' ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= site_url('entry') ?>">
                         <i class="fas fa-fw fa-table"></i>
@@ -162,10 +162,8 @@
 
     <!-- Page level plugins -->
     <script src="<?= base_url('assets/') ?>vendor/chart.js/Chart.min.js"></script>
+    <script src="<?= base_url('assets/') ?>vendor/chart.js/utils.js"></script>
 
-    <!-- Page level custom scripts -->
-    <script src="<?= base_url('assets/') ?>js/demo/chart-area-demo.js"></script>
-    <script src="<?= base_url('assets/') ?>js/demo/chart-pie-demo.js"></script>
 
     <!-- table page -->
     <script src="<?= base_url('assets/') ?>vendor/datatables/jquery.dataTables.min.js"></script>
@@ -269,6 +267,69 @@
             $("#errorMessageModal").html("");
             $('#btn_submit').remove();
         }
+    </script>
+
+    <script>
+        var MONTHS = ['Bambanglipuro', 'Banguntapan', 'Bantul', 'Dlingo', 'Imogiri', 'Jetis', 'Kasihan', 'Kretek', 'Pajangan', 'Pandak', 'Piyungan', 'Pleret', 'Pundong', 'Sanden', 'Sedayu', 'Sewon', 'Srandakan'];
+        var color = Chart.helpers.color;
+        var barChartData = {
+            labels: ['Bambanglipuro', 'Banguntapan', 'Bantul', 'Dlingo', 'Imogiri', 'Jetis', 'Kasihan', 'Kretek', 'Pajangan', 'Pandak', 'Piyungan', 'Pleret', 'Pundong', 'Sanden', 'Sedayu', 'Sewon', 'Srandakan'],
+            datasets: [{
+                label: 'Valid',
+                backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.green,
+                borderWidth: 1,
+                data: [
+                    <?= $grafik_valid ?>
+                ]
+            }, {
+                label: 'Perbaikan Data',
+                backgroundColor: color(window.chartColors.grey).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.grey,
+                borderWidth: 1,
+                data: [
+                    <?= $grafik_perbaikan ?>
+                ]
+            }, {
+                label: 'Dicek Operator',
+                backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.blue,
+                borderWidth: 1,
+                data: [
+                    <?= $grafik_entri ?>
+                ]
+            }, {
+                label: 'Konsolidasi NIK',
+                backgroundColor: color(window.chartColors.yellow).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.yellow,
+                borderWidth: 1,
+                data: [
+                    <?= $grafik_konsolidasi ?>
+                ]
+            }]
+
+        };
+
+        window.onload = function() {
+            var ctx = document.getElementById('myBarChart').getContext('2d');
+            window.myBar = new Chart(ctx, {
+                type: 'bar',
+                data: barChartData,
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Status Data'
+                    }
+                }
+            });
+
+        };
+
+        var colorNames = Object.keys(window.chartColors);
     </script>
 
 </body>

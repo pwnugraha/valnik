@@ -66,6 +66,8 @@ class Auth extends CI_Controller
 				redirect('data', 'refresh');
 			} else if ($user_group['group_id'] == 2) {
 				redirect('entry', 'refresh');
+			} else if ($user_group['group_id'] == 1) {
+				redirect('statistik', 'refresh');
 			}
 		}
 
@@ -89,7 +91,7 @@ class Auth extends CI_Controller
 				//redirect them back to the home page
 				$this->session->set_flashdata('message', $this->ion_auth->messages());
 				if ($this->ion_auth->is_admin()) {
-					redirect('statistic', 'refresh');
+					redirect('statistik', 'refresh');
 				}
 
 				if ($this->base_model->get_join_item('row', '*', NULL, 'users', ['users_groups'], ['users.id=users_groups.user_id'], ['inner'], ['users.id' => $this->session->userdata('user_id'), 'group_id' => 3])) {

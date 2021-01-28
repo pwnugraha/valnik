@@ -13,7 +13,7 @@ class Entry extends AppBase
     function __construct()
     {
         parent::__construct();
-        if ($this->user_group['group_id'] != 2) {
+        if (!in_array($this->user_group['group_id'], [1, 2])) {
             show_404();
         }
     }
