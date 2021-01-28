@@ -44,6 +44,14 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Tables -->
+            <?php if ($authorization_group == 2) { ?>
+                <li class="nav-item <?= $this->uri->segment(1) == 'entry' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= site_url('entry') ?>">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>Entry</span></a>
+                </li>
+            <?php } ?>
+
             <?php if ($authorization_group == 3) { ?>
                 <li class="nav-item <?= $this->uri->segment(1) == 'data' ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= site_url('data') ?>">
@@ -172,7 +180,7 @@
                 var kec = $(this).val();
 
                 $.ajax({
-                    url: '<?= base_url() ?>' + '/data/get_kel',
+                    url: '<?= base_url() ?>' + '<?= $this->uri->segment(1) ?>' + '/get_kel',
                     method: "POST",
                     data: {
                         kec: kec
@@ -199,6 +207,19 @@
                 $("#id_art_update").val(idArt);
                 $("#update_oldnik").html('NIK : ' + oldNik);
                 $("#update_oldname").html('Nama : ' + oldName);
+            });
+
+            $(document).on("click", "#update_entry", function() {
+                var idArt = $(this).attr("data-idart");
+                var oldNik = $(this).attr("data-oldnik");
+                var oldName = $(this).attr("data-oldname");
+                var newNik = $(this).attr("data-newnik");
+                var newName = $(this).attr("data-newname");
+                $("#id_art_update").val(idArt);
+                $("#update_oldnik").html('NIK : ' + oldNik);
+                $("#update_oldname").html('Nama : ' + oldName);
+                $("#update_newnik").html('Perbaikan NIK : ' + newNik);
+                $("#update_newname").html('Perbaikan Nama : ' + newName);
             });
 
             $('#saveModal').on('hide.bs.modal', function(e) {

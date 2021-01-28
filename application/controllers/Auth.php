@@ -64,6 +64,8 @@ class Auth extends CI_Controller
 			$user_group = $this->base_model->get_item('row', 'users_groups', 'group_id', ['user_id' => $this->session->userdata('user_id')]);
 			if ($user_group['group_id'] == 3) {
 				redirect('data', 'refresh');
+			} else if ($user_group['group_id'] == 2) {
+				redirect('entry', 'refresh');
 			}
 		}
 
@@ -93,7 +95,8 @@ class Auth extends CI_Controller
 				if ($this->base_model->get_join_item('row', '*', NULL, 'users', ['users_groups'], ['users.id=users_groups.user_id'], ['inner'], ['users.id' => $this->session->userdata('user_id'), 'group_id' => 3])) {
 					redirect('data', 'refresh');
 				}
-				redirect('statistic', 'refresh');
+
+				redirect('entry', 'refresh');
 			} else {
 				// if the login was un-successful
 				// redirect them back to the login page

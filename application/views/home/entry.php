@@ -3,10 +3,15 @@
     <?= $this->session->flashdata('message'); ?>
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800">Data</h1>
-    <?= form_open('data', ['class' => 'form-inline']) ?>
+    <?= form_open('entry', ['class' => 'form-inline']) ?>
     <select class="custom-select my-1 mr-sm-2" name="kec" id="kec">
-        <option>Pilih Kecamatan...</option>
-        <option value="<?= $current_kec ?>" selected><?= $current_kec ?></option>
+        <option <?= is_null($current_kec) ? 'selected' : '' ?>>Pilih Kecamatan...</option>
+        <?php if (!empty($kec)) :
+            foreach ($kec as $i) : ?>
+                <option value="<?= $i['kec'] ?>" <?= $current_kec == $i['kec'] ? 'selected' : '' ?>><?= $i['kec'] ?></option>
+        <?php
+            endforeach;
+        endif; ?>
     </select>
     <select class="custom-select my-1 mr-sm-2" name="kel" id="kel">
         <option>Pilih Desa...</option>
@@ -30,14 +35,6 @@
     <?php
     if (!empty($items)) : ?>
         <div class="card shadow mb-4">
-            <div class="card-header py-3 text-right">
-                <?= form_open('data/export') ?>
-                <input type="hidden" name="kec" value="<?= $current_kec ?>">
-                <input type="hidden" name="kel" value="<?= $current_kel ?>">
-                <input type="hidden" name="status" value="<?= $current_status ?>">
-                <button type="submit" class="btn btn-secondari my-1"><i class="fas fa-download"></i> Export</button>
-                <?= form_close() ?>
-            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -73,8 +70,8 @@
                                     <td><?= $i['nama_art'] ?></td>
                                     <td><?= $i['update_nik'] ?></td>
                                     <td><?= $i['update_nama'] ?></td>
-                                    <td><?php if ($i['status'] == 2) : ?>
-                                            <a class="btn btn-sm btn-secondary" href="#" data-toggle="modal" data-target="#saveModal" id="update" data-idart="<?= $i['id_art'] ?>" data-oldnik="<?= $i['nik_art'] ?>" data-oldname="<?= $i['nama_art'] ?>">
+                                    <td><?php if ($i['status'] == 3) : ?>
+                                            <a class="btn btn-sm btn-info" href="#" data-toggle="modal" data-target="#saveModal" id="update_entry" data-idart="<?= $i['id_art'] ?>" data-oldnik="<?= $i['nik_art'] ?>" data-oldname="<?= $i['nama_art'] ?>" data-newnik="<?= $i['update_nik'] ?>" data-newname="<?= $i['update_nama'] ?>">
                                                 Update
                                             </a>
                                         <?php endif; ?>
@@ -113,21 +110,20 @@
                 <p id="update_oldnik"></p>
                 <p id="update_oldname"></p>
                 <p><strong>Diupdate menjadi:</strong></p>
-                <?= form_open('data/save', ['id' => 'form_update']) ?>
-                <div class="form-group">
-                    <label>Perbaikan NIK</label>
-                    <input type="text" class="form-control" id="update_nik" name="update_nik" onkeyup="onKeyRelease()" placeholder="Masukkan NIK" required>
-                </div>
-                <div class="form-group">
-                    <label>Nama Capil</label>
-                    <input type="text" class="form-control" disabled id="nama_capil">
-                </div>
+                <p class="text-info" id="update_newnik"></p>
+                <p class="text-info" id="update_newname"></p>
+                <p style="margin-bottom: 0;"><strong>Hasil Entry (pilih salah satu):</strong></p>
+                <?= form_open('entry/save', ['id' => 'form_update']) ?>
+                <select class="custom-select my-2 mr-sm-2" name="status_valid" id="status_valid">
+                    <option value="1">Data Valid berhasil dientri</option>
+                    <option value="4">Data tidak berhasil dientri. Ajukan konsolidasi NIK</option>
+                    <option value="2">Perbaikan data belum meyakinkan. Ajukan perbaikan kembali</option>
+                </select>
                 <input type="hidden" name="id_art_update" id="id_art_update" value="">
-                <input type="hidden" name="update_nama" id="update_nama" value="">
                 <input type="hidden" name="kec_update" id="kec_update" value="<?= is_null($current_kec) ? '' : $current_kec ?>">
                 <input type="hidden" name="kel_update" id="kel_update" value="<?= is_null($current_kel) ? '' : $current_kel ?>">
                 <input type="hidden" name="status_update" id="status_update" value="<?= $current_status ?>">
-                <button type="button" class="btn btn-secondary" onclick="checkCapil()">Cek Capil</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
                 <?= form_close() ?>
             </div>
         </div>
