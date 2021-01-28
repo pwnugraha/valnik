@@ -6,35 +6,55 @@ require_once 'application/controllers/Base.php';
 class Data extends AppBase
 {
     protected $data = [];
+    protected $kec_data = NULL;
     function __construct()
     {
         parent::__construct();
+        if ($this->user_group['group_id'] != 3) {
+            show_404();
+        }
+        $this->kec_data = $this->base_model->get_item('row', 'users', 'company', ['id' => $this->session->userdata('user_id')]);
     }
     public function index()
     {
         $this->data['kec'] = $this->base_model->get_item('result', 'art', 'DISTINCT(kec)');
         $this->data['items'] = [];
-        $this->data['current_kec'] = $this->session->flashdata('kec') ? $this->session->flashdata('kec') : NULL;
+        $this->data['current_kec'] = $this->kec_data['company'];
         $this->data['current_kel'] = $this->session->flashdata('kel') ? $this->session->flashdata('kel') : NULL;
+        $this->data['current_status'] = $this->session->flashdata('status') ? $this->session->flashdata('status') : 0;
         $this->data['error_message'] = '';
 
         $this->form_validation->set_rules('kec', 'Kecamatan', 'trim|required');
         $this->form_validation->set_rules('kel', 'Kelurahan', 'trim|required');
 
+        $this->data['data_kel'] = $this->base_model->get_item('result', 'art', 'DISTINCT(kel)', ['kec' => $this->data['current_kec']]);
         if ($this->form_validation->run() === FALSE) {
             $this->data['data_kel'] = $this->base_model->get_item('result', 'art', 'DISTINCT(kel)', ['kec' => $this->data['current_kec']]);
             $this->data['items'] = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->data['current_kec'], 'kel' => $this->data['current_kel']]);
+            if ($this->data['current_status'] != 0) {
+                $this->data['items'] = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->data['current_kec'], 'kel' => $this->data['current_kel'], 'status' => $this->data['current_status']]);
+            }
         } else {
             $items = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel')]);
+            if ($this->input->post('status') != 0) {
+                $items = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel'), 'status' => $this->input->post('status')]);
+            }
+
             $data_kel = $this->base_model->get_item('result', 'art', 'DISTINCT(kel)', ['kec' => $this->input->post('kec')]);
             if ($items) {
                 $this->data['current_kec'] = $this->input->post('kec');
                 $this->data['current_kel'] = $this->input->post('kel');
+                $this->data['current_status'] = $this->input->post('status');
                 $this->data['data_kel'] = $data_kel;
                 $this->data['items'] = $items;
             }
         }
         $this->adminview('home/tables', $this->data);
+    }
+
+    public function maintenance()
+    {
+        $this->load->view('home/maintenance');
     }
 
     public function get_kel()
@@ -72,12 +92,13 @@ class Data extends AppBase
         }
         $this->session->set_flashdata('kec', $this->input->post('kec_update'));
         $this->session->set_flashdata('kel', $this->input->post('kel_update'));
-        redirect('');
+        $this->session->set_flashdata('status', $this->input->post('status_update'));
+        redirect('data');
     }
 
     public function get_capil()
     {
-        $this->form_validation->set_rules('nik', 'NIK', 'trim|numeric|exact_length[16]|required');
+        $this->form_validation->set_rules('nik', 'Perbaikan NIK', 'trim|numeric|exact_length[16]|required');
         if ($this->form_validation->run() === FALSE) {
             echo json_encode(['status' => false, 'message' => validation_errors()]);
         } else {

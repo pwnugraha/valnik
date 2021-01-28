@@ -8,8 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name=”robots” content=”noindex,nofollow” />
 
     <title>VALNIK</title>
+    <link rel="icon" href="<?= base_url() ?>assets/img/favico.png" type="image/gif">
 
     <!-- Custom fonts for this template-->
     <link href="<?= base_url('assets/') ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -22,16 +24,16 @@
     <link href="<?= base_url('assets/') ?>vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 </head>
 
-<body id="page-top">
+<body id="page-top" class="sidebar-toggled">
 
     <!-- Page Wrapper -->
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                 </div>
@@ -42,19 +44,22 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Tables -->
-            <li class="nav-item <?= empty($this->uri->segment(1)) ? 'active' : '' ?>">
-                <a class="nav-link" href="<?= site_url() ?>">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Data</span></a>
-            </li>
+            <?php if ($authorization_group == 3) { ?>
+                <li class="nav-item <?= $this->uri->segment(1) == 'data' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= site_url('data') ?>">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>Data</span></a>
+                </li>
+            <?php } ?>
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item <?= $this->uri->segment(1) == 'statistik' ? 'active' : '' ?>">
-                <a class="nav-link" href="<?= site_url('statistik') ?>">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Statistik</span></a>
-            </li>
-
+            <?php if ($authorization_group == 1) { ?>
+                <li class="nav-item <?= $this->uri->segment(1) == 'statistik' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= site_url('statistik') ?>">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>Statistik</span></a>
+                </li>
+            <?php } ?>
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -79,6 +84,17 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
+                    <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= base_url('auth/logout') ?>">
+                                <span class="mr-2 d-lg-inline text-gray-600 small">Logout</span>
+                            </a>
+                        </li>
+
+                    </ul>
+
                 </nav>
                 <!-- End of Topbar -->
 
@@ -90,7 +106,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
+                        <span>Valnik Dashboard v1.1.0</span>
                     </div>
                 </div>
             </footer>
@@ -178,11 +194,19 @@
 
             $(document).on("click", "#update", function() {
                 var idArt = $(this).attr("data-idart");
+                var oldNik = $(this).attr("data-oldnik");
+                var oldName = $(this).attr("data-oldname");
                 $("#id_art_update").val(idArt);
+                $("#update_oldnik").html('NIK : ' + oldNik);
+                $("#update_oldname").html('Nama : ' + oldName);
             });
 
             $('#saveModal').on('hide.bs.modal', function(e) {
                 $("#id_art_update").val("");
+                $("#nama_capil").val("");
+                $("#update_nik").val("");
+                $("#update_oldnik").html('');
+                $("#update_oldname").html('');
             })
         });
 
@@ -206,6 +230,7 @@
                         } else {
                             $("#errorMessageModal").removeClass("text-danger").addClass("text-success").html("NIK ditemukan di dukcapil");
                             $('#update_nama').val(obj.result.result.nama);
+                            $('#nama_capil').val(obj.result.result.nama);
                             $('#form_update').append('<button type="submit" class="btn btn-primary" id="btn_submit">Simpan</button>');
                         }
                     } else {
@@ -215,6 +240,13 @@
                 }
             });
             return false;
+        }
+
+        function onKeyRelease() {
+            $('#update_nama').val("");
+            $('#nama_capil').val("");
+            $("#errorMessageModal").html("");
+            $('#btn_submit').remove();
         }
     </script>
 
