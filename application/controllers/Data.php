@@ -3,6 +3,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 require_once 'application/controllers/Base.php';
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class Data extends AppBase
 {
     protected $data = [];
@@ -124,5 +127,65 @@ class Data extends AppBase
             //var_dump(json_decode($response, true));
             echo json_encode(['status' => true, 'data' => $response]);
         }
+    }
+
+    public function export()
+    {
+        $export_data = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel')]);
+
+        if ($this->input->post('status') != 0) {
+            $export_data = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel'), 'status' => $this->input->post('status')]);
+        }
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $i = 2;
+        $sheet->setCellValue('A1', 'NO');
+        $sheet->setCellValue('B1', 'KEC');
+        $sheet->setCellValue('C1', 'DESA');
+        $sheet->setCellValue('D1', 'ID DTKS');
+        $sheet->setCellValue('E1', 'ID ART');
+        $sheet->setCellValue('F1', 'NAMA KRT');
+        $sheet->setCellValue('G1', 'ALAMAT');
+        $sheet->setCellValue('H1', 'NIK ART');
+        $sheet->setCellValue('I1', 'NAMA ART');
+        $sheet->setCellValue('J1', 'BSP');
+        $sheet->setCellValue('K1', 'PKH');
+        $sheet->setCellValue('L1', 'PBI');
+        $sheet->setCellValue('M1', 'STATUS');
+        $sheet->setCellValue('N1', 'PERBAIKAN NIK');
+        $sheet->setCellValue('O1', 'PERBAIKAN NAMA');
+        if (!empty($export_data)) {
+            foreach ($export_data as $v) {
+
+                $sheet->setCellValue('A' . $i, $i - 1);
+                $sheet->setCellValue('B' . $i, $v['kec']);
+                $sheet->setCellValue('C' . $i, $v['kel']);
+                $sheet->setCellValue('D' . $i, $v['id_dtks']);
+                $sheet->setCellValue('E' . $i, $v['id_art']);
+                $sheet->setCellValue('F' . $i, $v['nama_krt']);
+                $sheet->setCellValue('G' . $i, $v['alamat']);
+                $sheet->setCellValue('H' . $i, $v['nik_art']);
+                $sheet->setCellValue('I' . $i, $v['nama_art']);
+                $sheet->setCellValue('J' . $i, $v['bsp']);
+                $sheet->setCellValue('K' . $i, $v['pkh']);
+                $sheet->setCellValue('L' . $i, $v['pbi']);
+                if ($v['status'] == 1) {
+                    $sheet->setCellValue('M' . $i, 'valid');
+                } else if ($v['status'] == 2) {
+                    $sheet->setCellValue('M' . $i, 'Mohon perbaikan');
+                } else if ($v['status'] == 3) {
+                    $sheet->setCellValue('M' . $i, 'Menunggu dicek operator');
+                }
+
+                $sheet->setCellValue('N' . $i, $v['update_nik']);
+                $sheet->setCellValue('O' . $i, $v['update_nama']);
+                $i++;
+            }
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . urlencode($this->input->post('kel') . '.xlsx') . '"');
+        $writer->save('php://output');
     }
 }

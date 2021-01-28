@@ -29,6 +29,14 @@
     <?php
     if (!empty($items)) : ?>
         <div class="card shadow mb-4">
+            <div class="card-header py-3 text-right">
+                <?= form_open('data/export') ?>
+                <input type="hidden" name="kec" value="<?= $current_kec ?>">
+                <input type="hidden" name="kel" value="<?= $current_kel ?>">
+                <input type="hidden" name="status" value="<?= $current_status ?>">
+                <button type="submit" class="btn btn-secondari my-1"><i class="fas fa-download"></i> Export</button>
+                <?= form_close() ?>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -38,9 +46,10 @@
                                 <th>Status</th>
                                 <th>ID DTKS</th>
                                 <th>ID ART</th>
+                                <th>Nama KRT</th>
                                 <th>Alamat</th>
-                                <th>NIK</th>
-                                <th>Nama</th>
+                                <th>NIK ART</th>
+                                <th>Nama ART</th>
                                 <th>Perbaikan NIK</th>
                                 <th>Perbaikan Nama</th>
                                 <th>Aksi</th>
@@ -57,6 +66,7 @@
                                     <td><?= get_status($i['status']) ?></td>
                                     <td><?= $i['id_dtks'] ?></td>
                                     <td><?= $i['id_art'] ?></td>
+                                    <td><?= $i['nama_krt'] ?></td>
                                     <td><?= $i['alamat'] ?></td>
                                     <td><?= $i['nik_art'] ?></td>
                                     <td><?= $i['nama_art'] ?></td>
