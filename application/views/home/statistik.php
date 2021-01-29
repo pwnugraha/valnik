@@ -112,8 +112,45 @@
     <div class="row">
 
         <!-- Content Column -->
-        <div class="col-lg-6 mb-4">
+        <div class="col-lg-12 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <strong>Aktivitas Terkini</strong>
+                </div>
+                <?php
+                if (!empty($activities)) : ?>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Aktivitas</th>
+                                        <th>User</th>
+                                        <th>Waktu</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $no = 1;
+                                    foreach ($activities as $i) :
+                                    ?>
 
+                                        <tr>
+                                            <td><?= $no++ ?></td>
+                                            <td><?= $i['data'] ?></td>
+                                            <td><?= $i['username'] ?></td>
+                                            <td><?= date('d-m-Y H:i ', $i['created_at']) ?></td>
+                                        </tr>
+                                    <?php endforeach;
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <?php endif;
+                ?>
+            </div>
         </div>
     </div>
 

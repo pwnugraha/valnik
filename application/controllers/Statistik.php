@@ -26,10 +26,26 @@ class Statistik extends AppBase
         foreach ($grafik_statistik as $v) {
             $this->data['grafik'][$v['status']][$v['kec']] = $v['count'];
         }
-        $this->data['grafik_valid'] = implode(',', $this->data['grafik'][1]);
-        $this->data['grafik_perbaikan'] = implode(',', $this->data['grafik'][2]);
-        $this->data['grafik_entri'] = implode(',', $this->data['grafik'][3]);
-        $this->data['grafik_konsolidasi'] = implode(',', $this->data['grafik'][1]);
+        $this->data['grafik_valid'] = implode(',', [0]);
+        $this->data['grafik_perbaikan'] = implode(',', [0]);
+        $this->data['grafik_entri'] = implode(',', [0]);
+        $this->data['grafik_konsolidasi'] = implode(',', [0]);
+
+        if (!empty($this->data['grafik'][1])) {
+            $this->data['grafik_valid'] = implode(',', $this->data['grafik'][1]);
+        }
+        if (!empty($this->data['grafik'][2])) {
+            $this->data['grafik_perbaikan'] = implode(',', $this->data['grafik'][2]);
+        }
+        if (!empty($this->data['grafik'][3])) {
+            $this->data['grafik_entri'] = implode(',', $this->data['grafik'][3]);
+        }
+        if (!empty($this->data['grafik'][4])) {
+            $this->data['grafik_konsolidasi'] = implode(',', $this->data['grafik'][4]);
+        }
+
+        //recent activities
+        $this->data['activities'] = $this->base_model->get_join_item('result', 'log.*, users.username', NULL, 'log', ['users'], ['log.user_id = users.id'], ['inner'], NULL, NULL, 1000);
         $this->adminview('home/statistik', $this->data);
     }
 }
