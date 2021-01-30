@@ -77,7 +77,7 @@ class Data extends AppBase
             $this->session->set_flashdata('message', validation_errors());
         } else {
             $id_art = $this->input->post('id_art_update', TRUE);
-            $get_art = $this->base_model->get_item('row', 'art', 'id, update_nik, update_nama', ['id_art' => $id_art]);
+            $get_art = $this->base_model->get_item('row', 'art', 'id, kel, update_nik, update_nama', ['id_art' => $id_art]);
             $params = [
                 'update_nik' => $this->input->post('update_nik', TRUE),
                 'update_nama' => $this->input->post('update_nama', TRUE),
@@ -85,7 +85,7 @@ class Data extends AppBase
                 'updated_at' => time()
             ];
             $this->base_model->update_item('art', $params, ['id_art' => $id_art]);
-            $this->base_model->insert_item('log', ['data' => 'Username ' . $this->session->userdata('username') . ' mengupdate data. ID ART ' . $id_art . ' telah diupdate. NIK ' . $get_art['update_nik'] . ' NAMA ' . $get_art['update_nama'] . ' menjadi NIK ' . $params['update_nik'] . ' NAMA ' . $params['update_nama'], 'created_at' => time(), 'art_id' => $get_art['id'], 'user_id' => $this->session->userdata('user_id')]);
+            $this->base_model->insert_item('log', ['data' => 'Username ' . $this->session->userdata('username') . ' mengupdate data. ID ART ' . $id_art . ' , desa ' . $get_art['kel'] . ' telah diupdate. NIK ' . $get_art['nik_art'] . ' NAMA ' . $get_art['nama_art'] . ' menjadi NIK ' . $params['update_nik'] . ' NAMA ' . $params['update_nama'], 'created_at' => time(), 'art_id' => $get_art['id'], 'user_id' => $this->session->userdata('user_id')]);
             $this->session->set_flashdata('message', 'Data telah disimpan. Menunggu pengecekan dan entri oleh operator.');
         }
         $this->session->set_flashdata('kec', $this->input->post('kec_update'));
@@ -103,7 +103,7 @@ class Data extends AppBase
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://api.integrasvc.id/qm38q?nik=' . $this->input->post('nik', TRUE),
+                CURLOPT_URL => '',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -112,7 +112,7 @@ class Data extends AppBase
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'GET',
                 CURLOPT_HTTPHEADER => array(
-                    'Authorization: Basic NGJmdWh0OGI6M0ZkUmozcGtHdWdjNk9sYzIyYXBkeU1Kc04yUUx0dUg=',
+                    '',
                 ),
             ));
 

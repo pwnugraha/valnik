@@ -76,7 +76,7 @@ class Entry extends AppBase
         } else {
             $id_art = $this->input->post('id_art_update', TRUE);
             $status_valid = $this->input->post('status_valid', TRUE);
-            $get_art = $this->base_model->get_item('row', 'art', 'id, update_nik, update_nama', ['id_art' => $id_art]);
+            $get_art = $this->base_model->get_item('row', 'art', 'id, kel, update_nik, update_nama', ['id_art' => $id_art]);
             $params = [
                 'status' => $this->input->post('status_valid'),
                 'updated_at' => time()
@@ -91,7 +91,7 @@ class Entry extends AppBase
             }
 
             $this->base_model->update_item('art', $params, ['id_art' => $id_art]);
-            $this->base_model->insert_item('log', ['data' => 'Username ' . $this->session->userdata('username') . ' mengupdate data. ID ART ' . $id_art . ' telah diupdate. Status Hasil Entry ' . $status_entry . '.', 'created_at' => time(), 'art_id' => $get_art['id'], 'user_id' => $this->session->userdata('user_id')]);
+            $this->base_model->insert_item('log', ['data' => 'Username ' . $this->session->userdata('username') . ' mengupdate data. ID ART ' . $id_art . ' desa ' . $get_art['kel'] . ' telah diupdate. Status Hasil Entry ' . $status_entry . '.', 'created_at' => time(), 'art_id' => $get_art['id'], 'user_id' => $this->session->userdata('user_id')]);
             $this->session->set_flashdata('message', 'Data telah disimpan. Status data : ' . $status_entry);
         }
         $this->session->set_flashdata('kec', $this->input->post('kec_update'));
