@@ -267,70 +267,97 @@
             $("#errorMessageModal").html("");
             $('#btn_submit').remove();
         }
-    </script>
 
-    <script>
-        var MONTHS = ['Bambanglipuro', 'Banguntapan', 'Bantul', 'Dlingo', 'Imogiri', 'Jetis', 'Kasihan', 'Kretek', 'Pajangan', 'Pandak', 'Piyungan', 'Pleret', 'Pundong', 'Sanden', 'Sedayu', 'Sewon', 'Srandakan'];
-        var color = Chart.helpers.color;
-        var barChartData = {
-            labels: ['Bambanglipuro', 'Banguntapan', 'Bantul', 'Dlingo', 'Imogiri', 'Jetis', 'Kasihan', 'Kretek', 'Pajangan', 'Pandak', 'Piyungan', 'Pleret', 'Pundong', 'Sanden', 'Sedayu', 'Sewon', 'Srandakan'],
-            datasets: [{
-                label: 'Valid',
-                backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
-                borderColor: window.chartColors.green,
-                borderWidth: 1,
-                data: [
-                    <?= $grafik_valid ?>
-                ]
-            }, {
-                label: 'Perbaikan Data',
-                backgroundColor: color(window.chartColors.grey).alpha(0.5).rgbString(),
-                borderColor: window.chartColors.grey,
-                borderWidth: 1,
-                data: [
-                    <?= $grafik_perbaikan ?>
-                ]
-            }, {
-                label: 'Dicek Operator',
-                backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
-                borderColor: window.chartColors.blue,
-                borderWidth: 1,
-                data: [
-                    <?= $grafik_entri ?>
-                ]
-            }, {
-                label: 'Konsolidasi NIK',
-                backgroundColor: color(window.chartColors.yellow).alpha(0.5).rgbString(),
-                borderColor: window.chartColors.yellow,
-                borderWidth: 1,
-                data: [
-                    <?= $grafik_konsolidasi ?>
-                ]
-            }]
+        function getHistory() {
+            var art_id = $('#history').attr('data-idart')
+            $.ajax({
+                url: '<?= base_url() ?>' + '<?= $this->uri->segment(1) ?>' + '/get_history',
+                method: "POST",
+                data: {
+                    art_id: art_id
+                },
+                dataType: 'json',
+                success: function(data) {
+                    var html = '';
+                    if (data.status) {
+                        var no = 1;
+                        $.each(data.data, function(index, value) {
+                            var date = new Date(value.created_at * 1000);
+                            html += '<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0"><thead><tr><th>No</th><th style="width:15%">Waktu</th><th>Aktivitas</th></tr></thead><tbody><tr><td>' + no + '</td><td>' + date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + '</td><td>' + value.data + '</td></tr></tbody></table>';
+                        });
 
-        };
-
-        window.onload = function() {
-            var ctx = document.getElementById('myBarChart').getContext('2d');
-            window.myBar = new Chart(ctx, {
-                type: 'bar',
-                data: barChartData,
-                options: {
-                    responsive: true,
-                    legend: {
-                        position: 'top',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Status Data'
+                        $('#tableHistory').html(html);
+                    } else {
+                        $('#tableHistory').html('<p class="text-center">Belum memiliki riwayat aktivitas</p>');
                     }
                 }
             });
-
-        };
-
-        var colorNames = Object.keys(window.chartColors);
+        }
     </script>
+    <?php if ($authorization_group == 1) { ?>
+        <script>
+            var MONTHS = ['Bambanglipuro', 'Banguntapan', 'Bantul', 'Dlingo', 'Imogiri', 'Jetis', 'Kasihan', 'Kretek', 'Pajangan', 'Pandak', 'Piyungan', 'Pleret', 'Pundong', 'Sanden', 'Sedayu', 'Sewon', 'Srandakan'];
+            var color = Chart.helpers.color;
+            var barChartData = {
+                labels: ['Bambanglipuro', 'Banguntapan', 'Bantul', 'Dlingo', 'Imogiri', 'Jetis', 'Kasihan', 'Kretek', 'Pajangan', 'Pandak', 'Piyungan', 'Pleret', 'Pundong', 'Sanden', 'Sedayu', 'Sewon', 'Srandakan'],
+                datasets: [{
+                    label: 'Valid',
+                    backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.green,
+                    borderWidth: 1,
+                    data: [
+                        <?= $grafik_valid ?>
+                    ]
+                }, {
+                    label: 'Perbaikan Data',
+                    backgroundColor: color(window.chartColors.grey).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.grey,
+                    borderWidth: 1,
+                    data: [
+                        <?= $grafik_perbaikan ?>
+                    ]
+                }, {
+                    label: 'Dicek Operator',
+                    backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.blue,
+                    borderWidth: 1,
+                    data: [
+                        <?= $grafik_entri ?>
+                    ]
+                }, {
+                    label: 'Konsolidasi NIK',
+                    backgroundColor: color(window.chartColors.yellow).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.yellow,
+                    borderWidth: 1,
+                    data: [
+                        <?= $grafik_konsolidasi ?>
+                    ]
+                }]
+
+            };
+
+            window.onload = function() {
+                var ctx = document.getElementById('myBarChart').getContext('2d');
+                window.myBar = new Chart(ctx, {
+                    type: 'bar',
+                    data: barChartData,
+                    options: {
+                        responsive: true,
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Status Data'
+                        }
+                    }
+                });
+
+            };
+
+            var colorNames = Object.keys(window.chartColors);
+        </script>
+    <?php } ?>
 
 </body>
 

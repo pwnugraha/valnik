@@ -77,7 +77,7 @@ class Data extends AppBase
             $this->session->set_flashdata('message', validation_errors());
         } else {
             $id_art = $this->input->post('id_art_update', TRUE);
-            $get_art = $this->base_model->get_item('row', 'art', 'id, kel, update_nik, update_nama', ['id_art' => $id_art]);
+            $get_art = $this->base_model->get_item('row', 'art', 'id, kel, nik_art, nama_art, update_nik, update_nama', ['id_art' => $id_art]);
             $params = [
                 'update_nik' => $this->input->post('update_nik', TRUE),
                 'update_nama' => $this->input->post('update_nama', TRUE),
@@ -184,5 +184,15 @@ class Data extends AppBase
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="' . urlencode($this->input->post('kel') . '.xlsx') . '"');
         $writer->save('php://output');
+    }
+
+    public function get_history()
+    {
+        $data = $this->base_model->get_item('result', 'log', '*', ['art_id' => $this->input->post('art_id')]);
+        if (!empty($data)) {
+            echo json_encode(['status' => true, 'data' => $data]);
+        } else {
+            echo json_encode(['status' => false, 'data' => []]);
+        }
     }
 }

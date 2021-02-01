@@ -64,7 +64,15 @@
 
                                 <tr>
                                     <td><?= $no++ ?></td>
-                                    <td><?= get_status($i['status']) ?></td>
+                                    <td>
+                                        <?= get_status($i['status']) ?>
+                                        <div class="block">
+                                            <a class="btn btn-sm btn-default" href="#" data-toggle="modal" data-target="#historyModal" id="history" data-idart="<?= $i['id'] ?>" onclick="getHistory()">
+                                                Lihat Riwayat
+                                            </a>
+                                        </div>
+
+                                    </td>
                                     <td><?= $i['id_dtks'] ?></td>
                                     <td><?= $i['id_art'] ?></td>
                                     <td><?= $i['nama_krt'] ?></td>
@@ -129,6 +137,20 @@
                 <input type="hidden" name="status_update" id="status_update" value="<?= $current_status ?>">
                 <button type="button" class="btn btn-secondary" onclick="checkCapil()">Cek Capil</button>
                 <?= form_close() ?>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Riwayat</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" id="tableHistory">
             </div>
         </div>
     </div>

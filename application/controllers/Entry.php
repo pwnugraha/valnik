@@ -161,4 +161,14 @@ class Entry extends AppBase
         header('Content-Disposition: attachment; filename="' . urlencode($this->input->post('kel') . '.xlsx') . '"');
         $writer->save('php://output');
     }
+
+    public function get_history()
+    {
+        $data = $this->base_model->get_item('result', 'log', '*', ['art_id' => $this->input->post('art_id')]);
+        if (!empty($data)) {
+            echo json_encode(['status' => true, 'data' => $data]);
+        } else {
+            echo json_encode(['status' => false, 'data' => []]);
+        }
+    }
 }
