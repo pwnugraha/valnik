@@ -76,7 +76,7 @@ class Entry extends AppBase
         } else {
             $id_art = $this->input->post('id_art_update', TRUE);
             $status_valid = $this->input->post('status_valid', TRUE);
-            $get_art = $this->base_model->get_item('row', 'art', 'id, kel, update_nik, update_nama', ['id_art' => $id_art]);
+            $get_art = $this->base_model->get_item('row', 'art', 'id, kel, update_nik, update_nama, status', ['id_art' => $id_art]);
             $params = [
                 'status' => $this->input->post('status_valid'),
                 'updated_at' => time()
@@ -88,6 +88,11 @@ class Entry extends AppBase
                 $status_entry = 'Data tidak berhasil dientri. Ajukan konsolidasi NIK';
             } else if ($status_valid == 2) {
                 $status_entry = 'Perbaikan data belum meyakinkan. Ajukan perbaikan kembali';
+            }
+
+            if ($get_art['status'] != 3) {
+                $this->session->set_flashdata('message', 'Data telah dientri. Pilih data lain yang belum dientri.');
+                redirect('entry');
             }
 
             $this->base_model->update_item('art', $params, ['id_art' => $id_art]);

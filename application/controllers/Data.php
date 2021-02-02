@@ -77,13 +77,17 @@ class Data extends AppBase
             $this->session->set_flashdata('message', validation_errors());
         } else {
             $id_art = $this->input->post('id_art_update', TRUE);
-            $get_art = $this->base_model->get_item('row', 'art', 'id, kel, nik_art, nama_art, update_nik, update_nama', ['id_art' => $id_art]);
+            $get_art = $this->base_model->get_item('row', 'art', 'id, kel, nik_art, nama_art, update_nik, update_nama, status', ['id_art' => $id_art]);
             $params = [
                 'update_nik' => $this->input->post('update_nik', TRUE),
                 'update_nama' => $this->input->post('update_nama', TRUE),
                 'status' => 3,
                 'updated_at' => time()
             ];
+            if ($get_art['status'] != 2) {
+                $this->session->set_flashdata('message', 'Data telah diperbaiki. Pilih data lain yang belum diperbaiki.');
+                redirect('data');
+            }
             $this->base_model->update_item('art', $params, ['id_art' => $id_art]);
             $this->base_model->insert_item('log', ['data' => 'Username ' . $this->session->userdata('username') . ' mengupdate data. ID ART ' . $id_art . ' , desa ' . $get_art['kel'] . ' telah diupdate. NIK ' . $get_art['nik_art'] . ' NAMA ' . $get_art['nama_art'] . ' menjadi NIK ' . $params['update_nik'] . ' NAMA ' . $params['update_nama'], 'created_at' => time(), 'art_id' => $get_art['id'], 'user_id' => $this->session->userdata('user_id')]);
             $this->session->set_flashdata('message', 'Data telah disimpan. Menunggu pengecekan dan entri oleh operator.');

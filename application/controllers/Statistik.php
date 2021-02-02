@@ -45,7 +45,7 @@ class Statistik extends AppBase
         }
 
         //recent activities
-        $this->data['activities'] = $this->base_model->get_join_item('result', 'log.*, users.username', 'created_at DESC', 'log', ['users'], ['log.user_id = users.id'], ['inner'], NULL, NULL, 1000);
+        $this->data['activities'] = $this->base_model->get_join_item('result', 'log.*, users.username', 'created_at DESC', 'log', ['users'], ['log.user_id = users.id'], ['inner']);
         $this->adminview('home/statistik', $this->data);
     }
 }
