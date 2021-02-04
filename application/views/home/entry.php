@@ -64,7 +64,7 @@
                                     <td>
                                         <?= get_status($i['status']) ?>
                                         <div class="block">
-                                            <a class="btn btn-sm btn-default" href="#" data-toggle="modal" data-target="#historyModal" id="history" data-idart="<?= $i['id'] ?>" onclick="getHistory()">
+                                            <a class="btn btn-sm btn-default" href="#" data-toggle="modal" data-target="#historyModal" id="history" data-idart="<?= $i['id'] ?>">
                                                 Lihat Riwayat
                                             </a>
                                         </div>

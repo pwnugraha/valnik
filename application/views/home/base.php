@@ -268,8 +268,8 @@
             $('#btn_submit').remove();
         }
 
-        function getHistory() {
-            var art_id = $('#history').attr('data-idart')
+        $(document).on("click", "#history", function() {
+            var art_id = $(this).attr('data-idart')
             $.ajax({
                 url: '<?= base_url() ?>' + '<?= $this->uri->segment(1) ?>' + '/get_history',
                 method: "POST",
@@ -278,13 +278,16 @@
                 },
                 dataType: 'json',
                 success: function(data) {
-                    var html = '';
+                    var html = '<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0"><thead><tr><th>No</th><th style="width:15%">Waktu</th><th>Aktivitas</th></tr></thead><tbody>';
                     if (data.status) {
                         var no = 1;
                         $.each(data.data, function(index, value) {
                             var date = new Date(value.created_at * 1000);
-                            html += '<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0"><thead><tr><th>No</th><th style="width:15%">Waktu</th><th>Aktivitas</th></tr></thead><tbody><tr><td>' + no + '</td><td>' + date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + '</td><td>' + value.data + '</td></tr></tbody></table>';
+                            html += '<tr><td>' + no + '</td><td>' + date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + '</td><td>' + value.data + '</td></tr>';
+                            no++;
+
                         });
+                        html += '</tbody></table>';
 
                         $('#tableHistory').html(html);
                     } else {
@@ -292,7 +295,7 @@
                     }
                 }
             });
-        }
+        });
     </script>
     <?php if ($authorization_group == 1) { ?>
         <script>
