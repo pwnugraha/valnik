@@ -19,6 +19,8 @@ class Statistik extends AppBase
         $this->data['count_per_status'][2] = 0;
         $this->data['count_per_status'][3] = 0;
         $this->data['count_per_status'][4] = 0;
+        $this->data['count_per_status'][5] = 0;
+        $this->data['count_per_status'][6] = 0;
         foreach ($group_per_status as $v) {
             $this->data['count_per_status'][$v['status']] = $v['count'];
         }

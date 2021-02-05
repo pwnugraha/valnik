@@ -32,13 +32,13 @@ class Data extends AppBase
 
         $this->data['data_kel'] = $this->base_model->get_item('result', 'art', 'DISTINCT(kel)', ['kec' => $this->data['current_kec']]);
         if ($this->form_validation->run() === FALSE) {
-            $this->data['data_kel'] = $this->base_model->get_item('result', 'art', 'DISTINCT(kel)', ['kec' => $this->data['current_kec'], 'status !=' => 5, 'status !=' => 6]);
-            $this->data['items'] = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->data['current_kec'], 'kel' => $this->data['current_kel']]);
+            $this->data['data_kel'] = $this->base_model->get_item('result', 'art', 'DISTINCT(kel)', ['kec' => $this->data['current_kec']]);
+            $this->data['items'] = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->data['current_kec'], 'kel' => $this->data['current_kel'], 'status NOT IN (5,6)' => NULL]);
             if ($this->data['current_status'] != 0) {
                 $this->data['items'] = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->data['current_kec'], 'kel' => $this->data['current_kel'], 'status' => $this->data['current_status']]);
             }
         } else {
-            $items = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel')]);
+            $items = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel'), 'status NOT IN (5,6)' => NULL]);
             if ($this->input->post('status') != 0) {
                 $items = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel'), 'status' => $this->input->post('status')]);
             }
