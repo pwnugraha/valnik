@@ -214,6 +214,7 @@
                 var newNik = $(this).attr("data-newnik");
                 var newName = $(this).attr("data-newname");
                 $("#id_art_update").val(idArt);
+                $("#update_idart").html('ID ART : ' + idArt);
                 $("#update_oldnik").html('NIK : ' + oldNik);
                 $("#update_oldname").html('Nama : ' + oldName);
                 $("#update_newnik").html('Perbaikan NIK : ' + newNik);

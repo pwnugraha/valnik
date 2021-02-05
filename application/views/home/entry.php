@@ -28,6 +28,8 @@
         <option value="3" <?= $current_status == 3 ? 'selected' : '' ?>>Tampilkan status "Menunggu dicek operator"</option>
         <option value="1" <?= $current_status == 1 ? 'selected' : '' ?>>Tampilkan status "Valid"</option>
         <option value="4" <?= $current_status == 4 ? 'selected' : '' ?>>Tampilkan status "Sedang diajukan konsolidasi NIK"</option>
+        <option value="5" <?= $current_status == 5 ? 'selected' : '' ?>>Tampilkan status "Tidak bisa dientri (Perbaikan meliputi NIK dan Nama)"</option>
+        <option value="6" <?= $current_status == 6 ? 'selected' : '' ?>>Tampilkan status "ID ART tidak ditemukan di SIKS Online"</option>
     </select>
     <button type="submit" class="btn btn-primary my-1">Tampilkan</button>
     <?= form_close() ?>
@@ -42,6 +44,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Status</th>
+                                <th>Aksi</th>
                                 <th>ID DTKS</th>
                                 <th>ID ART</th>
                                 <th>Nama KRT</th>
@@ -50,7 +53,6 @@
                                 <th>Nama ART</th>
                                 <th>Perbaikan NIK</th>
                                 <th>Perbaikan Nama</th>
-                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,6 +71,12 @@
                                             </a>
                                         </div>
                                     </td>
+                                    <td><?php if ($i['status'] == 3 || $i['status'] == 5 || $i['status'] == 6) : ?>
+                                            <a class="btn btn-sm btn-info" href="#" data-toggle="modal" data-target="#saveModal" id="update_entry" data-idart="<?= $i['id_art'] ?>" data-oldnik="<?= $i['nik_art'] ?>" data-oldname="<?= $i['nama_art'] ?>" data-newnik="<?= $i['update_nik'] ?>" data-newname="<?= $i['update_nama'] ?>">
+                                                Update
+                                            </a>
+                                        <?php endif; ?>
+                                    </td>
                                     <td><?= $i['id_dtks'] ?></td>
                                     <td><?= $i['id_art'] ?></td>
                                     <td><?= $i['nama_krt'] ?></td>
@@ -77,12 +85,6 @@
                                     <td><?= $i['nama_art'] ?></td>
                                     <td><?= $i['update_nik'] ?></td>
                                     <td><?= $i['update_nama'] ?></td>
-                                    <td><?php if ($i['status'] == 3) : ?>
-                                            <a class="btn btn-sm btn-info" href="#" data-toggle="modal" data-target="#saveModal" id="update_entry" data-idart="<?= $i['id_art'] ?>" data-oldnik="<?= $i['nik_art'] ?>" data-oldname="<?= $i['nama_art'] ?>" data-newnik="<?= $i['update_nik'] ?>" data-newname="<?= $i['update_nama'] ?>">
-                                                Update
-                                            </a>
-                                        <?php endif; ?>
-                                    </td>
                                 </tr>
                             <?php endforeach;
                             ?>
@@ -93,7 +95,7 @@
         </div>
     <?php else : ?>
         <div class="mt-5">
-            <h5 class="text-center">Tentukan wilayah yang akan ditampilkan datanya.</h5>
+            <h5 class="text-center">Data Kosong. Tentukan wilayah dan status yang akan ditampilkan datanya.</h5>
         </div>
 
     <?php
@@ -114,6 +116,7 @@
             <div class="modal-body">
                 <p class="text-danger" id="errorMessageModal"></p>
                 <p><strong>Data awal:</strong></p>
+                <p id="update_idart"></p>
                 <p id="update_oldnik"></p>
                 <p id="update_oldname"></p>
                 <p><strong>Diupdate menjadi:</strong></p>
@@ -125,6 +128,8 @@
                     <option value="1">Data Valid berhasil dientri</option>
                     <option value="4">Data tidak berhasil dientri. Ajukan konsolidasi NIK</option>
                     <option value="2">Perbaikan data belum meyakinkan. Ajukan perbaikan kembali</option>
+                    <option value="5">Tidak bisa dientri (Perbaikan NIK dan Nama)</option>
+                    <option value="6">ID ART tidak ditemukan di SIKS Online</option>
                 </select>
                 <input type="hidden" name="id_art_update" id="id_art_update" value="">
                 <input type="hidden" name="kec_update" id="kec_update" value="<?= is_null($current_kec) ? '' : $current_kec ?>">
@@ -162,6 +167,10 @@ function get_status($status)
             return '<span class="badge badge-info">Menunggu dicek operator</span>';
         case 4:
             return '<span class="badge badge-warning">Sedang diajukan konsolidasi NIK</span>';
+        case 5:
+            return '<span class="badge badge-danger">Tidak bisa dientri (Perbaikan NIK dan Nama)</span>';
+        case 6:
+            return '<span class="badge badge-danger">ID ART tidak ditemukan di SIKS Online</span>';
     }
 }
 ?>

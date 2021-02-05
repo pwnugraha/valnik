@@ -43,11 +43,12 @@ class Entry extends AppBase
             }
 
             $data_kel = $this->base_model->get_item('result', 'art', 'DISTINCT(kel)', ['kec' => $this->input->post('kec')]);
+            $this->data['current_kec'] = $this->input->post('kec');
+            $this->data['current_kel'] = $this->input->post('kel');
+            $this->data['current_status'] = $this->input->post('status');
+            $this->data['data_kel'] = $data_kel;
             if ($items) {
-                $this->data['current_kec'] = $this->input->post('kec');
-                $this->data['current_kel'] = $this->input->post('kel');
-                $this->data['current_status'] = $this->input->post('status');
-                $this->data['data_kel'] = $data_kel;
+
                 $this->data['items'] = $items;
             }
         }
@@ -81,23 +82,25 @@ class Entry extends AppBase
                 'status' => $this->input->post('status_valid'),
                 'updated_at' => time()
             ];
-            $status_entry = 0;
+            $status_entry = "";
             if ($status_valid == 1) {
-                $status_entry = 'Data Valid berhasil dientri';
+                $status_entry = 'Status data : Data Valid berhasil dientri';
             } else if ($status_valid == 4) {
-                $status_entry = 'Data tidak berhasil dientri. Ajukan konsolidasi NIK';
+                $status_entry = 'Status data : Data tidak berhasil dientri. Ajukan konsolidasi NIK';
             } else if ($status_valid == 2) {
-                $status_entry = 'Perbaikan data belum meyakinkan. Ajukan perbaikan kembali';
+                $status_entry = 'Status data : Perbaikan data belum meyakinkan. Ajukan perbaikan kembali';
             }
 
-            if ($get_art['status'] != 3) {
+            if ($get_art['status'] != 3 && $get_art['status'] != 5 && $get_art['status'] != 6) {
                 $this->session->set_flashdata('message', 'Data telah dientri. Pilih data lain yang belum dientri.');
                 redirect('entry');
             }
 
             $this->base_model->update_item('art', $params, ['id_art' => $id_art]);
-            $this->base_model->insert_item('log', ['data' => 'Username ' . $this->session->userdata('username') . ' mengupdate data. ID ART ' . $id_art . ' desa ' . $get_art['kel'] . ' telah diupdate. Status Hasil Entry ' . $status_entry . '.', 'created_at' => time(), 'art_id' => $get_art['id'], 'user_id' => $this->session->userdata('user_id')]);
-            $this->session->set_flashdata('message', 'Data telah disimpan. Status data : ' . $status_entry);
+            if (in_array($status_valid, [1, 4, 2])) {
+                $this->base_model->insert_item('log', ['data' => 'Username ' . $this->session->userdata('username') . ' mengupdate data. ID ART ' . $id_art . ' desa ' . $get_art['kel'] . ' telah diupdate. Status Hasil Entry ' . $status_entry . '.', 'created_at' => time(), 'art_id' => $get_art['id'], 'user_id' => $this->session->userdata('user_id')]);
+            }
+            $this->session->set_flashdata('message', 'Data telah disimpan. ' . $status_entry);
         }
         $this->session->set_flashdata('kec', $this->input->post('kec_update'));
         $this->session->set_flashdata('kel', $this->input->post('kel_update'));
