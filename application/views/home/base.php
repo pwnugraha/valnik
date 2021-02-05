@@ -203,8 +203,8 @@
                 var oldNik = $(this).attr("data-oldnik");
                 var oldName = $(this).attr("data-oldname");
                 $("#id_art_update").val(idArt);
-                $("#update_oldnik").html('NIK : ' + oldNik);
-                $("#update_oldname").html('Nama : ' + oldName);
+                $("#update_oldnik").html('NIK ART : ' + oldNik);
+                $("#update_oldname").html('Nama ART : ' + oldName);
             });
 
             $(document).on("click", "#update_entry", function() {
@@ -215,10 +215,10 @@
                 var newName = $(this).attr("data-newname");
                 $("#id_art_update").val(idArt);
                 $("#update_idart").html('ID ART : ' + idArt);
-                $("#update_oldnik").html('NIK : ' + oldNik);
-                $("#update_oldname").html('Nama : ' + oldName);
-                $("#update_newnik").html('Perbaikan NIK : ' + newNik);
-                $("#update_newname").html('Perbaikan Nama : ' + newName);
+                $("#update_oldnik").html('NIK ART : ' + oldNik);
+                $("#update_oldname").html('Nama ART : ' + oldName);
+                $("#update_newnik").html('Perbaikan NIK ART : ' + newNik);
+                $("#update_newname").html('Perbaikan Nama ART : ' + newName);
             });
 
             $('#saveModal').on('hide.bs.modal', function(e) {

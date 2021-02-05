@@ -117,13 +117,13 @@
             </div>
             <div class="modal-body">
                 <p class="text-danger" id="errorMessageModal"></p>
-                <p><strong>Data awal:</strong></p>
+                <p><strong>Data awal ART:</strong></p>
                 <p id="update_oldnik"></p>
                 <p id="update_oldname"></p>
                 <p><strong>Diupdate menjadi:</strong></p>
                 <?= form_open('data/save', ['id' => 'form_update']) ?>
                 <div class="form-group">
-                    <label>Perbaikan NIK</label>
+                    <label>Perbaikan NIK ART</label>
                     <input type="text" class="form-control" id="update_nik" name="update_nik" onkeyup="onKeyRelease()" placeholder="Masukkan NIK" required>
                 </div>
                 <div class="form-group">
