@@ -179,4 +179,50 @@ class Entry extends AppBase
             echo json_encode(['status' => false, 'data' => []]);
         }
     }
+
+    public function can_not_entry($status)
+    {
+        $this->data['items'] = $this->base_model->get_item('result', 'art', '*', ['status' => $status]);
+        $this->data['can_not_entry_status'] = $status;
+
+        $this->adminview('home/can_not_entry', $this->data);
+    }
+
+    public function save_can_not_entry($status)
+    {
+        $this->form_validation->set_rules('id_art_update', 'ID ART', 'trim|required|numeric');
+        $this->form_validation->set_rules('status_valid', 'Status Hasil Entry', 'trim|required|numeric');
+
+        if ($this->form_validation->run() === FALSE) {
+            $this->session->set_flashdata('message', validation_errors());
+        } else {
+            $id_art = $this->input->post('id_art_update', TRUE);
+            $status_valid = $this->input->post('status_valid', TRUE);
+            $get_art = $this->base_model->get_item('row', 'art', 'id, kel, update_nik, update_nama, status', ['id_art' => $id_art]);
+            $params = [
+                'status' => $this->input->post('status_valid'),
+                'updated_at' => time()
+            ];
+            $status_entry = "";
+            if ($status_valid == 1) {
+                $status_entry = 'Status data : Data Valid berhasil dientri';
+            } else if ($status_valid == 4) {
+                $status_entry = 'Status data : Data tidak berhasil dientri. Ajukan konsolidasi NIK';
+            } else if ($status_valid == 2) {
+                $status_entry = 'Status data : Perbaikan data belum meyakinkan. Ajukan perbaikan kembali';
+            }
+
+            if ($get_art['status'] != 3 && $get_art['status'] != 5 && $get_art['status'] != 6) {
+                $this->session->set_flashdata('message', 'Data telah dientri. Pilih data lain yang belum dientri.');
+                redirect('entry');
+            }
+
+            $this->base_model->update_item('art', $params, ['id_art' => $id_art]);
+            if (in_array($status_valid, [1, 4, 2])) {
+                $this->base_model->insert_item('log', ['data' => 'Username ' . $this->session->userdata('username') . ' mengupdate data. ID ART ' . $id_art . ' desa ' . $get_art['kel'] . ' telah diupdate. Status Hasil Entry ' . $status_entry . '.', 'created_at' => time(), 'art_id' => $get_art['id'], 'user_id' => $this->session->userdata('user_id')]);
+            }
+            $this->session->set_flashdata('message', 'Data telah disimpan. ' . $status_entry);
+        }
+        redirect('entry/can_not_entry/' . $status);
+    }
 }

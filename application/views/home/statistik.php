@@ -91,7 +91,8 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                Tidak bisa dientri</div>
+                                <a href="<?= base_url('entry/can_not_entry/5') ?>" class="text-danger">Tidak bisa dientri</a>
+                            </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $count_per_status[5] ?> ART</div>
                         </div>
                         <div class="col-auto">
@@ -107,7 +108,8 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                Tidak ditemukan di SIKS</div>
+                                <a href="<?= base_url('entry/can_not_entry/6') ?>" class="text-danger">Tidak ditemukan di SIKS</a>
+                            </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $count_per_status[6] ?> ART</div>
                         </div>
                         <div class="col-auto">
