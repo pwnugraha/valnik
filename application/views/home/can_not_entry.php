@@ -51,6 +51,7 @@
                                     </td>
                                     <td><?= $i['kec'] ?></td>
                                     <td><?= $i['kel'] ?></td>
+                                    <td><?= $i['id_dtks'] ?></td>
                                     <td><?= $i['id_art'] ?></td>
                                     <td><?= $i['nama_krt'] ?></td>
                                     <td><?= $i['alamat'] ?></td>

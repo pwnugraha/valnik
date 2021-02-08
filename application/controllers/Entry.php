@@ -91,7 +91,8 @@ class Entry extends AppBase
                 $status_entry = 'Status data : Perbaikan data belum meyakinkan. Ajukan perbaikan kembali';
             }
 
-            if ($get_art['status'] != 3 && $get_art['status'] != 5 && $get_art['status'] != 6) {
+            //deny if had been updated
+            if ($get_art['status'] != 3) {
                 $this->session->set_flashdata('message', 'Data telah dientri. Pilih data lain yang belum dientri.');
                 redirect('entry');
             }

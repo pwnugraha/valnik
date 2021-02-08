@@ -84,6 +84,8 @@ class Data extends AppBase
                 'status' => 3,
                 'updated_at' => time()
             ];
+
+            //deny update if had been updated
             if ($get_art['status'] != 2) {
                 $this->session->set_flashdata('message', 'Data telah diperbaiki. Pilih data lain yang belum diperbaiki.');
                 redirect('data');
