@@ -48,7 +48,12 @@
                 <li class="nav-item <?= $this->uri->segment(1) == 'entry' ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= site_url('entry') ?>">
                         <i class="fas fa-fw fa-table"></i>
-                        <span>Entry</span></a>
+                        <span>Entry DTKS</span></a>
+                </li>
+                <li class="nav-item <?= $this->uri->segment(1) == 'entry_pbi' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= site_url('entry_pbi') ?>">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>Entry PBI</span></a>
                 </li>
             <?php } ?>
 
@@ -56,7 +61,12 @@
                 <li class="nav-item <?= $this->uri->segment(1) == 'data' ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= site_url('data') ?>">
                         <i class="fas fa-fw fa-table"></i>
-                        <span>Data</span></a>
+                        <span>Data DTKS</span></a>
+                </li>
+                <li class="nav-item <?= $this->uri->segment(1) == 'data_pbi' ? 'active' : '' ?>">
+                    <a class="nav-link" href="<?= site_url('data_pbi') ?>">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>Data PBI</span></a>
                 </li>
             <?php } ?>
 
@@ -114,7 +124,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Valnik Dashboard v1.1.0</span>
+                        <span>Valnik Dashboard v1.2.0</span>
                     </div>
                 </div>
             </footer>

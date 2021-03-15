@@ -6,7 +6,7 @@ require_once 'application/controllers/Base.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-class Entry extends AppBase
+class Entry_pbi extends AppBase
 {
     protected $data = [];
     protected $kec_data = NULL;
@@ -19,7 +19,7 @@ class Entry extends AppBase
     }
     public function index()
     {
-        $this->data['kec'] = $this->base_model->get_item('result', 'art', 'DISTINCT(kec)');
+        $this->data['kec'] = $this->base_model->get_item('result', 'valnik_pbi', 'DISTINCT(kec)');
         $this->data['items'] = [];
         $this->data['current_kec'] = $this->session->flashdata('kec') ? $this->session->flashdata('kec') : NULL;
         $this->data['current_kel'] = $this->session->flashdata('kel') ? $this->session->flashdata('kel') : NULL;
@@ -29,20 +29,20 @@ class Entry extends AppBase
         $this->form_validation->set_rules('kec', 'Kecamatan', 'trim|required');
         $this->form_validation->set_rules('kel', 'Kelurahan', 'trim|required');
 
-        $this->data['data_kel'] = $this->base_model->get_item('result', 'art', 'DISTINCT(kel)', ['kec' => $this->data['current_kec']]);
+        $this->data['data_kel'] = $this->base_model->get_item('result', 'valnik_pbi', 'DISTINCT(kel)', ['kec' => $this->data['current_kec']]);
         if ($this->form_validation->run() === FALSE) {
-            $this->data['data_kel'] = $this->base_model->get_item('result', 'art', 'DISTINCT(kel)', ['kec' => $this->data['current_kec']]);
-            $this->data['items'] = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->data['current_kec'], 'kel' => $this->data['current_kel']]);
+            $this->data['data_kel'] = $this->base_model->get_item('result', 'valnik_pbi', 'DISTINCT(kel)', ['kec' => $this->data['current_kec']]);
+            $this->data['items'] = $this->base_model->get_item('result', 'valnik_pbi', '*', ['kec' => $this->data['current_kec'], 'kel' => $this->data['current_kel']]);
             if ($this->data['current_status'] != 0) {
-                $this->data['items'] = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->data['current_kec'], 'kel' => $this->data['current_kel'], 'status' => $this->data['current_status']]);
+                $this->data['items'] = $this->base_model->get_item('result', 'valnik_pbi', '*', ['kec' => $this->data['current_kec'], 'kel' => $this->data['current_kel'], 'status' => $this->data['current_status']]);
             }
         } else {
-            $items = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel')]);
+            $items = $this->base_model->get_item('result', 'valnik_pbi', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel')]);
             if ($this->input->post('status') != 0) {
-                $items = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel'), 'status' => $this->input->post('status')]);
+                $items = $this->base_model->get_item('result', 'valnik_pbi', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel'), 'status' => $this->input->post('status')]);
             }
 
-            $data_kel = $this->base_model->get_item('result', 'art', 'DISTINCT(kel)', ['kec' => $this->input->post('kec')]);
+            $data_kel = $this->base_model->get_item('result', 'valnik_pbi', 'DISTINCT(kel)', ['kec' => $this->input->post('kec')]);
             $this->data['current_kec'] = $this->input->post('kec');
             $this->data['current_kel'] = $this->input->post('kel');
             $this->data['current_status'] = $this->input->post('status');
@@ -52,12 +52,12 @@ class Entry extends AppBase
                 $this->data['items'] = $items;
             }
         }
-        $this->adminview('home/entry', $this->data);
+        $this->adminview('pbi/entry', $this->data);
     }
 
     public function get_kel()
     {
-        $data = $this->base_model->get_item('result', 'art', 'DISTINCT(kel)', ['kec' => $this->input->post('kec')]);
+        $data = $this->base_model->get_item('result', 'valnik_pbi', 'DISTINCT(kel)', ['kec' => $this->input->post('kec')]);
         if (!empty($data)) {
             echo json_encode(['status' => true, 'data' => $data]);
         } else {
@@ -77,7 +77,7 @@ class Entry extends AppBase
         } else {
             $id_art = $this->input->post('id_art_update', TRUE);
             $status_valid = $this->input->post('status_valid', TRUE);
-            $get_art = $this->base_model->get_item('row', 'art', 'id, kel, update_nik, update_nama, status', ['id_art' => $id_art]);
+            $get_art = $this->base_model->get_item('row', 'valnik_pbi', 'id, kel, update_nik, update_nama, status', ['id_art' => $id_art]);
             $params = [
                 'status' => $this->input->post('status_valid'),
                 'updated_at' => time()
@@ -94,27 +94,27 @@ class Entry extends AppBase
             //deny if had been updated
             if ($get_art['status'] != 3) {
                 $this->session->set_flashdata('message', 'Data telah dientri. Pilih data lain yang belum dientri.');
-                redirect('entry');
+                redirect('entry_pbi');
             }
 
-            $this->base_model->update_item('art', $params, ['id_art' => $id_art]);
+            $this->base_model->update_item('valnik_pbi', $params, ['id_art' => $id_art]);
             if (in_array($status_valid, [1, 4, 2])) {
-                $this->base_model->insert_item('log', ['data' => 'Username ' . $this->session->userdata('username') . ' mengupdate data. ID ART ' . $id_art . ' desa ' . $get_art['kel'] . ' telah diupdate. Status Hasil Entry ' . $status_entry . '.', 'created_at' => time(), 'art_id' => $get_art['id'], 'user_id' => $this->session->userdata('user_id')]);
+                $this->base_model->insert_item('log_pbi', ['data' => 'Username ' . $this->session->userdata('username') . ' mengupdate data. ID ART ' . $id_art . ' desa ' . $get_art['kel'] . ' telah diupdate. Status Hasil Entry ' . $status_entry . '.', 'created_at' => time(), 'art_id' => $get_art['id'], 'user_id' => $this->session->userdata('user_id')]);
             }
             $this->session->set_flashdata('message', 'Data telah disimpan. ' . $status_entry);
         }
         $this->session->set_flashdata('kec', $this->input->post('kec_update'));
         $this->session->set_flashdata('kel', $this->input->post('kel_update'));
         $this->session->set_flashdata('status', $this->input->post('status_update'));
-        redirect('entry');
+        redirect('entry_pbi');
     }
 
     public function export()
     {
-        $export_data = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel')]);
+        $export_data = $this->base_model->get_item('result', 'valnik_pbi', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel')]);
 
         if ($this->input->post('status') != 0) {
-            $export_data = $this->base_model->get_item('result', 'art', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel'), 'status' => $this->input->post('status')]);
+            $export_data = $this->base_model->get_item('result', 'valnik_pbi', '*', ['kec' => $this->input->post('kec'), 'kel' => $this->input->post('kel'), 'status' => $this->input->post('status')]);
         }
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -173,20 +173,20 @@ class Entry extends AppBase
 
     public function get_history()
     {
-        $data = $this->base_model->get_item('result', 'log', '*', ['art_id' => $this->input->post('art_id')]);
+        $data = $this->base_model->get_item('result', 'log_pbi', '*', ['art_id' => $this->input->post('art_id')]);
         if (!empty($data)) {
             echo json_encode(['status' => true, 'data' => $data]);
         } else {
             echo json_encode(['status' => false, 'data' => []]);
         }
     }
-    
+
     public function can_not_entry($status)
     {
-        $this->data['items'] = $this->base_model->get_item('result', 'art', '*', ['status' => $status]);
+        $this->data['items'] = $this->base_model->get_item('result', 'valnik_pbi', '*', ['status' => $status]);
         $this->data['can_not_entry_status'] = $status;
 
-        $this->adminview('home/can_not_entry', $this->data);
+        $this->adminview('pbi/can_not_entry', $this->data);
     }
 
     public function save_can_not_entry($status)
@@ -199,7 +199,7 @@ class Entry extends AppBase
         } else {
             $id_art = $this->input->post('id_art_update', TRUE);
             $status_valid = $this->input->post('status_valid', TRUE);
-            $get_art = $this->base_model->get_item('row', 'art', 'id, kel, update_nik, update_nama, status', ['id_art' => $id_art]);
+            $get_art = $this->base_model->get_item('row', 'valnik_pbi', 'id, kel, update_nik, update_nama, status', ['id_art' => $id_art]);
             $params = [
                 'status' => $this->input->post('status_valid'),
                 'updated_at' => time()
@@ -215,12 +215,12 @@ class Entry extends AppBase
 
             if ($get_art['status'] != 3 && $get_art['status'] != 5 && $get_art['status'] != 6) {
                 $this->session->set_flashdata('message', 'Data telah dientri. Pilih data lain yang belum dientri.');
-                redirect('entry');
+                redirect('entry_pbi');
             }
 
-            $this->base_model->update_item('art', $params, ['id_art' => $id_art]);
+            $this->base_model->update_item('valnik_pbi', $params, ['id_art' => $id_art]);
             if (in_array($status_valid, [1, 4, 2])) {
-                $this->base_model->insert_item('log', ['data' => 'Username ' . $this->session->userdata('username') . ' mengupdate data. ID ART ' . $id_art . ' desa ' . $get_art['kel'] . ' telah diupdate. Status Hasil Entry ' . $status_entry . '.', 'created_at' => time(), 'art_id' => $get_art['id'], 'user_id' => $this->session->userdata('user_id')]);
+                $this->base_model->insert_item('log_pbi', ['data' => 'Username ' . $this->session->userdata('username') . ' mengupdate data. ID ART ' . $id_art . ' desa ' . $get_art['kel'] . ' telah diupdate. Status Hasil Entry ' . $status_entry . '.', 'created_at' => time(), 'art_id' => $get_art['id'], 'user_id' => $this->session->userdata('user_id')]);
             }
             $this->session->set_flashdata('message', 'Data telah disimpan. ' . $status_entry);
         }
