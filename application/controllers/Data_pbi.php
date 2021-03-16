@@ -113,45 +113,37 @@ class Data_pbi extends AppBase
         $sheet->setCellValue('A1', 'NO');
         $sheet->setCellValue('B1', 'KEC');
         $sheet->setCellValue('C1', 'DESA');
-        $sheet->setCellValue('D1', 'ID DTKS');
-        $sheet->setCellValue('E1', 'ID ART');
-        $sheet->setCellValue('F1', 'NAMA KRT');
-        $sheet->setCellValue('G1', 'ALAMAT');
-        $sheet->setCellValue('H1', 'NIK ART');
-        $sheet->setCellValue('I1', 'NAMA ART');
-        $sheet->setCellValue('J1', 'BSP');
-        $sheet->setCellValue('K1', 'PKH');
-        $sheet->setCellValue('L1', 'PBI');
-        $sheet->setCellValue('M1', 'STATUS');
-        $sheet->setCellValue('N1', 'PERBAIKAN NIK');
-        $sheet->setCellValue('O1', 'PERBAIKAN NAMA');
+        $sheet->setCellValue('D1', 'ID ART');
+        $sheet->setCellValue('E1', 'ALAMAT');
+        $sheet->setCellValue('F1', 'NIK ART');
+        $sheet->setCellValue('G1', 'NAMA ART');
+        $sheet->setCellValue('H1', 'KETERANGAN');
+        $sheet->setCellValue('I1', 'STATUS');
+        $sheet->setCellValue('J1', 'PERBAIKAN NIK');
+        $sheet->setCellValue('K1', 'PERBAIKAN NAMA');
         if (!empty($export_data)) {
             foreach ($export_data as $v) {
 
                 $sheet->setCellValue('A' . $i, $i - 1);
                 $sheet->setCellValue('B' . $i, $v['kec']);
                 $sheet->setCellValue('C' . $i, $v['kel']);
-                $sheet->setCellValueExplicit('D' . $i, $v['id_dtks'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-                $sheet->setCellValueExplicit('E' . $i, $v['id_art'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-                $sheet->setCellValue('F' . $i, $v['nama_krt']);
-                $sheet->setCellValue('G' . $i, $v['alamat']);
-                $sheet->setCellValueExplicit('H' . $i, $v['nik_art'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-                $sheet->setCellValue('I' . $i, $v['nama_art']);
-                $sheet->setCellValue('J' . $i, $v['bsp']);
-                $sheet->setCellValue('K' . $i, $v['pkh']);
-                $sheet->setCellValue('L' . $i, $v['pbi']);
+                $sheet->setCellValueExplicit('D' . $i, $v['id_art'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                $sheet->setCellValue('E' . $i, $v['alamat']);
+                $sheet->setCellValueExplicit('F' . $i, $v['nik_art'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                $sheet->setCellValue('G' . $i, $v['nama_art']);
+                $sheet->setCellValue('H' . $i, $v['is_bdt']);
                 if ($v['status'] == 1) {
-                    $sheet->setCellValue('M' . $i, 'valid');
+                    $sheet->setCellValue('I' . $i, 'valid');
                 } else if ($v['status'] == 2) {
-                    $sheet->setCellValue('M' . $i, 'Mohon perbaikan');
+                    $sheet->setCellValue('I' . $i, 'Mohon perbaikan');
                 } else if ($v['status'] == 3) {
-                    $sheet->setCellValue('M' . $i, 'Menunggu dicek operator');
+                    $sheet->setCellValue('I' . $i, 'Menunggu dicek operator');
                 } else if ($v['status'] == 4) {
-                    $sheet->setCellValue('M' . $i, 'Sedang diajukan konsolidasi NIK');
+                    $sheet->setCellValue('I' . $i, 'Sedang diajukan konsolidasi NIK');
                 }
-
-                $sheet->setCellValueExplicit('N' . $i, $v['update_nik'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-                $sheet->setCellValue('O' . $i, $v['update_nama']);
+                $sheet->setCellValue('H' . $i, $v['is_bdt']);
+                $sheet->setCellValueExplicit('J' . $i, $v['update_nik'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                $sheet->setCellValue('K' . $i, $v['update_nama']);
                 $i++;
             }
         }
