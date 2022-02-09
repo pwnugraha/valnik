@@ -1,1 +1,1 @@
-# valnik
+# valnik for nik validation management
